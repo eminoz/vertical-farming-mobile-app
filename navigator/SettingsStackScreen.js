@@ -1,17 +1,16 @@
-import  React from "react";
+import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import DetailsScreen from "../screens/DetailsScreen";
+import AuthScreen from "../screens/AuthScreen";
 import SettingsScreen from "../screens/SettingsScreen";
 
 const SettingsStack = createNativeStackNavigator();
 
- const SettingsStackScreen = () => {
+const SettingsStackScreen = () => {
   return (
     <SettingsStack.Navigator>
       <SettingsStack.Screen name="Settings" component={SettingsScreen} />
-      <SettingsStack.Screen name="Details" component={DetailsScreen} />
+      <SettingsStack.Screen name="Auth" component={AuthScreen} />
     </SettingsStack.Navigator>
   );
 };
-export default SettingsStackScreen
-
+export default SettingsStackScreen;

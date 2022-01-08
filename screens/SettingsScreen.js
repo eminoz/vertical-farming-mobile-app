@@ -6,8 +6,8 @@ const SettingsScreen = ({ navigation }) => {
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
       <Text>Settings screen</Text>
       <Button
-        title="Go to Details"
-        onPress={() => navigation.navigate("Details")}
+        title="Auth Setting"
+        onPress={() => navigation.navigate("Auth")}
       />
     </View>
   );
