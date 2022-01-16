@@ -1,20 +1,34 @@
 import React, { useState } from "react";
 import {
   ScrollView,
-  KeyboardAvoidingView,
   StyleSheet,
   Text,
   View,
   TextInput,
   TouchableOpacity,
 } from "react-native";
+import { getDatabase } from "firebase/database";
+import { app } from "../firebase";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+
+const database = getDatabase(app);
 
 const AuthScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const signup = () => {
-    console.log(email);
+
+  const auth = getAuth();
+  const userRegister = () => {
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        console.log(user);
+      })
+      .catch((error) => {
+        console.log(error.message);
+      });
   };
+
   return (
     <ScrollView>
       <View style={styles.container}>
@@ -35,7 +49,7 @@ const AuthScreen = () => {
           />
         </View>
         <View style={styles.buttonContainer}>
-          <TouchableOpacity onPress={signup} style={styles.button}>
+          <TouchableOpacity onPress={userRegister} style={styles.button}>
             <Text style={styles.buttonText}>signup</Text>
           </TouchableOpacity>
         </View>
