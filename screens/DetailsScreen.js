@@ -6,11 +6,14 @@ import { getDatabase, ref, onValue } from "firebase/database";
 const DetailsScreen = () => {
   const [active, setActive] = useState(null);
   const [motorIsActive, setMotorActive] = useState(null);
+  const [nem, setNem] = useState(null);
+  const [derece, setDerece] = useState(null);
 
   const database = getDatabase(app);
 
   const starCountRef = ref(database, "led/");
   const suMotoru = ref(database, "sumotoru/");
+  const sicaklik = ref(database, "sicaklik/");
 
   useEffect(() => {
     onValue(starCountRef, (snapshot) => {
@@ -26,6 +29,14 @@ const DetailsScreen = () => {
       setMotorActive(data);
     });
   }, [motorIsActive]);
+  useEffect(() => {
+    onValue(sicaklik, (result) => {
+      const derece = result.val().derece;
+      const nem = result.val().nem;
+      setDerece(derece);
+      setNem(nem);
+    });
+  }, [derece, nem]);
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <ScrollView>
@@ -35,8 +46,12 @@ const DetailsScreen = () => {
             <Text style={styles.ledInfo}>{active ? "OFF" : "ON"} </Text>
           </Card>
           <Card style={styles.cardContainer}>
-            <Text style={styles.lableText}>Motor:</Text>
+            <Text style={styles.lableText}>Su Motoru:</Text>
             <Text style={styles.ledInfo}>{motorIsActive ? "OFF" : "ON"}</Text>
+          </Card>
+          <Card style={styles.cardContainer}>
+            <Text style={styles.lableText}>Derece / Nem</Text>
+            <Text style={styles.ledInfo}>{`${derece} / %${nem}`}</Text>
           </Card>
         </View>
       </ScrollView>
@@ -49,7 +64,7 @@ export default DetailsScreen;
 const styles = StyleSheet.create({
   cardContainer: {
     flex: 1,
-    justifyContent: "space-evenly",
+    justifyContent: "space-between",
     alignItems: "center",
     flexDirection: "row",
     height: "90%",
