@@ -14,7 +14,6 @@ const HomeScreen = ({ navigation }) => {
     <SafeAreaView style={{ flex: 1 }}>
       <ScrollView>
         <View style={styles.container}>
-
           <TouchableOpacity
             onPress={() => {
               navigation.navigate("Details");
@@ -30,6 +29,26 @@ const HomeScreen = ({ navigation }) => {
                 }}
               >
                 Show working system
+              </Text>
+            </Card>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.container}>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("SetWorking");
+            }}
+          >
+            <Card style={styles.cardContainer}>
+              <Text
+                style={{
+                  fontWeight: "bold",
+                  fontSize: 20,
+                  margin: 20,
+                  color: "#696969",
+                }}
+              >
+                Set Working Screen
               </Text>
             </Card>
           </TouchableOpacity>

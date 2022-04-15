@@ -1,14 +1,20 @@
-import React from 'react'
-import { StyleSheet,TouchableOpacity, Text, View } from 'react-native'
+import React from "react";
+import { StyleSheet, TouchableOpacity, Text, View } from "react-native";
 
-const Button = () => {
-    return (
-        <View>
-            <Text></Text>
-        </View>
-    )
-}
+const Button = ({ onPress, title, style }) => {
+  return (
+    <TouchableOpacity onPress={onPress} style={style}>
+      <Text style={styles.buttonTitleStyle}>{title}</Text>
+    </TouchableOpacity>
+  );
+};
 
-export default Button
+export default Button;
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  buttonTitleStyle: {
+    borderRadius: 10,
+    padding: 10,
+    fontSize: 23,
+  },
+});
