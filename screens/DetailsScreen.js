@@ -5,18 +5,27 @@ import { app } from "../firebase";
 import { getDatabase, ref, onValue } from "firebase/database";
 const DetailsScreen = () => {
   const [active, setActive] = useState(null);
+  const [motorIsActive, setMotorActive] = useState(null);
 
   const database = getDatabase(app);
 
   const starCountRef = ref(database, "led/");
+  const suMotoru = ref(database, "sumotoru/");
 
   useEffect(() => {
     onValue(starCountRef, (snapshot) => {
       const data = snapshot.val().led;
+
       setActive(data);
     });
   }, [active]);
 
+  useEffect(() => {
+    onValue(suMotoru, (motor) => {
+      const data = motor.val().motor;
+      setMotorActive(data);
+    });
+  }, [motorIsActive]);
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <ScrollView>
@@ -24,6 +33,10 @@ const DetailsScreen = () => {
           <Card style={styles.cardContainer}>
             <Text style={styles.lableText}>Led : </Text>
             <Text style={styles.ledInfo}>{active ? "OFF" : "ON"} </Text>
+          </Card>
+          <Card style={styles.cardContainer}>
+            <Text style={styles.lableText}>Motor:</Text>
+            <Text style={styles.ledInfo}>{motorIsActive ? "OFF" : "ON"}</Text>
           </Card>
         </View>
       </ScrollView>
@@ -43,6 +56,7 @@ const styles = StyleSheet.create({
     maxWidth: 400,
     padding: 15,
     maxHeight: 400,
+    margin: 10,
   },
   lableText: {
     fontWeight: "bold",

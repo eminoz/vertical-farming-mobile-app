@@ -5,15 +5,21 @@ import { app } from "../firebase";
 import { getDatabase, set, ref } from "firebase/database";
 const SettingsScreen = ({ navigation }) => {
   const [isEnabled, setIsEnabled] = useState(false);
+  const [isMotorActive, setMotorActive] = useState(false);
   const database = getDatabase(app);
-  
+
   const toggleSwitch = () => {
     setIsEnabled((previousState) => !previousState);
     set(ref(database, "led"), {
       led: isEnabled,
     });
   };
-
+  const motorSwitch = () => {
+    setMotorActive((motor) => !motor);
+    set(ref(database, "sumotoru"), {
+      motor: isMotorActive,
+    });
+  };
   return (
     <ScrollView>
       <View style={styles.container}>
@@ -25,6 +31,16 @@ const SettingsScreen = ({ navigation }) => {
             ios_backgroundColor="#3e3e3e"
             onValueChange={toggleSwitch}
             value={isEnabled}
+          />
+        </Card>
+        <Card style={styles.detailContainer}>
+          <Text style={styles.textContainer}>Su Motoru</Text>
+          <Switch
+            trackColor={{ false: "#767577", true: "#81b0ff" }}
+            thumbColor={isMotorActive ? "#f5dd4b" : "#f4f3f4"}
+            ios_backgroundColor="#3e3e3e"
+            onValueChange={motorSwitch}
+            value={isMotorActive}
           />
         </Card>
       </View>
@@ -42,13 +58,14 @@ const styles = StyleSheet.create({
   },
   detailContainer: {
     flex: 1,
-    justifyContent: "space-evenly",
+    justifyContent: "space-between",
     alignItems: "center",
     flexDirection: "row",
     width: "80%",
     maxWidth: 400,
     maxHeight: 400,
     padding: 20,
+    margin: 10,
   },
   textContainer: {
     fontWeight: "bold",
@@ -56,4 +73,3 @@ const styles = StyleSheet.create({
     color: "#696969",
   },
 });
-
