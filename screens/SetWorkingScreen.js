@@ -4,45 +4,86 @@ import {
   Text,
   TextInput,
   ScrollView,
-  View,
   KeyboardAvoidingView,
   Switch,
+  Alert,
 } from "react-native";
 import React from "react";
 import Card from "../components/UI/Card";
 import Button from "../components/UI/Button";
 import { app } from "../firebase";
-import { getDatabase, set, ref, update, onValue } from "firebase/database";
+import {
+  getDatabase,
+  set,
+  update,
+  ref,
+  child,
+  get,
+  onValue,
+} from "firebase/database";
 const database = getDatabase(app);
-const isiticiRef = ref(database, "isitici/isitici");
-let isIsiticiAuto;
+const dbRef = ref(getDatabase());
+
 const SetWorkingScreen = () => {
-  useEffect(() => {
-    onValue(isiticiRef, (result) => {
-      const data = result.val().auto;
-      isIsiticiAuto = data;
-    });
-  }, [isIsiticiAuto]);
   const [sicaklik, setSicaklik] = useState(null);
   const [nem, setNem] = useState(null);
-  const [isiticiIsAuto, setIsitici] = useState(isIsiticiAuto);
+  const [isiticiIsAuto, setIsitici] = useState(false);
+  const [isHavalandirmaActive, setHavalandirmaActive] = useState(false);
+  const isiticiRef = ref(database, "isitici/isitici");
+  useEffect(() => {
+    onValue(isiticiRef, (read) => {
+      const data = read.val().auto;
+      setIsitici(data);
+    });
+  }, [isiticiIsAuto]);
+
+  const havalandırmaRef = ref(database, "havalandirma/havalandirmaMotoru");
+  useEffect(() => {
+    onValue(havalandırmaRef, (read) => {
+      const data = read.val().isAuto;
+      setHavalandirmaActive(data);
+    });
+  }, [isHavalandirmaActive]);
 
   const setSicaklikVeNem = () => {
-    if ( sicaklik === null || nem === null) {
-      console.log("sicaklik boş olamaz");
+    if (sicaklik === null || nem === null) {
+      warningAlert();
       return;
     } else {
-      console.log(sicaklik);
       set(ref(database, "sicaklik/result/settable"), {
         sicaklik: sicaklik,
         nem: nem,
       });
+      successAlert();
     }
   };
-  const isiticiSwitch = () => {
-    setIsitici((isitici) => !isitici);
+  const successAlert = () =>
+    Alert.alert(
+      "Success",
+      `Sıcaklık: ${sicaklik} Nem: ${nem} olarak ayarlandı`,
+      [{ text: "OK" }]
+    );
+  const warningAlert = () =>
+    Alert.alert("Warnig", "Sıcaklık veya Nem boş olamaz", [
+      {
+        text: "Cancel",
+
+        style: "cancel",
+      },
+      { text: "OK" },
+    ]);
+
+  const isiticiSwitch = async () => {
+    await setIsitici((isitici) => !isitici);
+
     const updates = {};
-    updates["isitici/isitici/auto"] = isiticiIsAuto;
+    updates["isitici/isitici/auto"] = !isiticiIsAuto;
+    update(ref(database), updates);
+  };
+  const havalandırmaSwitch = () => {
+    setHavalandirmaActive((hava) => !hava);
+    const updates = {};
+    updates["havalandirma/havalandirmaMotoru/isAuto"] = !isHavalandirmaActive;
     update(ref(database), updates);
   };
   return (
@@ -84,6 +125,16 @@ const SetWorkingScreen = () => {
             ios_backgroundColor="#3e3e3e"
             onValueChange={isiticiSwitch}
             value={isiticiIsAuto}
+          />
+        </Card>
+        <Card style={styles.isiticiContainer}>
+          <Text style={styles.textContainer}>Havalandırma is Auto</Text>
+          <Switch
+            trackColor={{ false: "#767577", true: "#81b0ff" }}
+            thumbColor={isHavalandirmaActive ? "#f5dd4b" : "#f4f3f4"}
+            ios_backgroundColor="#3e3e3e"
+            onValueChange={havalandırmaSwitch}
+            value={isHavalandirmaActive}
           />
         </Card>
       </KeyboardAvoidingView>

@@ -4,13 +4,12 @@ import Card from "../components/UI/Card";
 import { app } from "../firebase";
 import { getDatabase, ref, onValue } from "firebase/database";
 const DetailsScreen = () => {
-  const [active, setActive] = useState(true);
-  const [motorIsActive, setMotorActive] = useState(true);
-  const [havalandırma, setHavalandirma] = useState(true);
-  const [isitici, setIsitici] = useState(true);
+  const [active, setActive] = useState(null);
+  const [motorIsActive, setMotorActive] = useState(null);
+  const [havalandırma, setHavalandirma] = useState(null);
+  const [isitici, setIsitici] = useState(null);
   const [nem, setNem] = useState(null);
   const [derece, setDerece] = useState(null);
-
   const database = getDatabase(app);
 
   const starCountRef = ref(database, "led/");
@@ -25,10 +24,10 @@ const DetailsScreen = () => {
       setHavalandirma(data.isActive);
     });
   }, [havalandırma]);
+
   useEffect(() => {
     onValue(isiticiRef, (result) => {
-      const data = result.val().isitici.auto;
-
+      const data = result.val().isitici;
       setIsitici(data.isActive);
     });
   }, [isiticiRef]);
@@ -59,11 +58,11 @@ const DetailsScreen = () => {
         <View style={styles.container}>
           <Card style={styles.cardContainer}>
             <Text style={styles.lableText}>Led : </Text>
-            <Text style={styles.ledInfo}>{active ? "OFF" : "ON"} </Text>
+            <Text style={styles.ledInfo}>{active ? "ON" : "OFF"} </Text>
           </Card>
           <Card style={styles.cardContainer}>
             <Text style={styles.lableText}>Su Motoru:</Text>
-            <Text style={styles.ledInfo}>{motorIsActive ? "OFF" : "ON"}</Text>
+            <Text style={styles.ledInfo}>{motorIsActive ? "ON" : "OFF"}</Text>
           </Card>
           <Card style={styles.cardContainer}>
             <Text style={styles.lableText}>Derece / Nem</Text>
@@ -72,12 +71,12 @@ const DetailsScreen = () => {
           <Card style={styles.cardContainer}>
             <Text style={styles.lableText}>Havalandırma</Text>
             <Text style={styles.ledInfo}>{`${
-              havalandırma ? "OFF" : "ON"
+              havalandırma ? "ON" : "OFF"
             }`}</Text>
           </Card>
           <Card style={styles.cardContainer}>
             <Text style={styles.lableText}>Isıtıcı</Text>
-            <Text style={styles.ledInfo}>{`${isitici ? "OFF" : "ON"}`}</Text>
+            <Text style={styles.ledInfo}>{`${isitici ? "ON" : "OFF"}`}</Text>
           </Card>
         </View>
       </ScrollView>
@@ -92,7 +91,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "space-between",
     alignItems: "center",
-    flexDirection: "row",
+    // flexDirection: "row",
     height: "90%",
     maxWidth: 400,
     padding: 15,

@@ -14,9 +14,9 @@ const App = () => {
           tabBarIcon: ({ focused, color, size }) => {
             let iconName;
 
-            if (route.name === "Home") {
+            if (route.name === "Main") {
               iconName = focused ? "home" : "home";
-            } else if (route.name === "Settings") {
+            } else if (route.name === "Setting") {
               iconName = focused ? "settings" : "settings";
             }
 
@@ -27,8 +27,8 @@ const App = () => {
           tabBarInactiveTintColor: "gray",
         })}
       >
-        <Tab.Screen name="Home" component={HomeStackScreen} />
-        <Tab.Screen name="Settings" component={SettingsStackScreen} />
+        <Tab.Screen name="Main" component={HomeStackScreen} />
+        <Tab.Screen name="Setting" component={SettingsStackScreen} />
       </Tab.Navigator>
     </NavigationContainer>
   );
